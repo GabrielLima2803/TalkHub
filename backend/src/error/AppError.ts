@@ -1,10 +1,10 @@
 export class AppError {
-    public readonly messege: string;
+    public readonly message: string; 
 
-    public readonly statusCode:number;
+    public readonly statusCode: number;
 
-    constructor(messege:string, statusCode = 400){
-        this.messege = messege;
+    constructor(message: string, statusCode = 500) {
+        this.message = message;
         this.statusCode = statusCode;
     }
 }
