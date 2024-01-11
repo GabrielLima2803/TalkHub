@@ -1,28 +1,25 @@
-import "express-async-errors";
-import {AppError} from "./error/AppError"
+import 'express-async-errors';
 import express, { NextFunction, Request, Response } from 'express';
-import { routes } from "./routes";
+import { AppError } from './error/AppError';
+import { routes } from './routes';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(routes);
 
-app.use(routes)
-
-app.use((err: Error, request: Request, response: Response, next: NextFunction) =>{
+app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
     if (err instanceof AppError) {
         return response.status(err.statusCode).json({
-            status: "error",
-            message: err.message
-        })
+            status: 'error',
+            message: err.message,
+        });
     }
     return response.status(500).json({
-        status: "error",
-        message: `Error Interno no servidor - ${err.message}`
-    })
-})
+        status: 'error',
+        message: `Erro interno no servidor - ${err.message}`,
+    });
+});
 
-
-
-app.listen(PORT, () => console.log(`Server is running in port: ${PORT}`));
+app.listen(PORT, () => console.log(`O servidor está rodando na porta: ${PORT}`));
