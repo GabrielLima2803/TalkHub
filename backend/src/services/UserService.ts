@@ -9,7 +9,6 @@ export namespace UserService {
     
     export class CreateUserService {
       async execute({ username, email, password }: UserDTO): Promise<User> {
-        try {
           const userExist = await prisma.user.findUnique({
             where: {
               email: email
@@ -19,6 +18,7 @@ export namespace UserService {
           if (!isValidEmail(email)) {
             throw new AppError("E-mail inválido");
           }
+     
 
           if (userExist) {
             throw new AppError("Usuário já existe");
@@ -33,12 +33,15 @@ export namespace UserService {
               password: hashedPassword
             }
           });
-  
           return user;
-        } catch (error) {
-          throw error; 
-        }
       }
+    }
+
+    export class GetAllUsers {
+        async execute(): Promise<User[]> {
+            const users = await prisma.user.findMany();
+            return users;
+          }
     }
   }
   
