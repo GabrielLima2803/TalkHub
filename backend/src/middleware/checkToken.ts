@@ -10,7 +10,7 @@ function checkToken(req: CustomRequest, res: Response, next: NextFunction) {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ msg: 'Acesso negado' });
+    return res.status(401).json({ msg: 'Acesso negado, faça o login para acessar essa rota' });
   }
 
   try {
