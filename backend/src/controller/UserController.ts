@@ -77,4 +77,31 @@ export namespace UserController {
           return res.status(200).json(result);
         }
       }
+
+      export class ForgetPasswordController {
+        async handle(req: Request, res: Response) {
+          const { email } = req.body;
+          try {
+            const result = await new UserService.ForgetPasswordService().execute({ email });
+            res.json(result);
+          } catch (error) {
+            res.status(500).json({ error: 'Erro ao processar a solicitação de recuperação de senha' });
+          }
+        }
+    }
+
+    export class ResetPasswordController {
+        async handle(req: Request, res: Response) {
+            const { email, code, newPassword } = req.body;
+    
+            try {
+                const userService = new UserService.ResetPasswordService();
+                const result = await userService.execute({ email, code, newPassword });
+                res.json(result);
+            } catch (error) {
+                res.status(500).json({ error: 'Erro ao resetar a senha' });
+            }
+        }
+    }
+
 }
