@@ -18,8 +18,7 @@ export class SocketManager {
 
       socket.on('join', (username: string) => {
         const user: User = { id: socket.id, username, socketId: socket.id };
-        this.connectedUsers.push(user);
-
+        this.connectedUsers.push(user); 
         this.io.emit('userConnected', user);
         this.io.emit('onlineUsers', this.connectedUsers.map((u) => u.username));
       });
