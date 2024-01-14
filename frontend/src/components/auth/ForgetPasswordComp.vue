@@ -3,17 +3,17 @@
         <div class="container">
             <div class="tittle-section">
                 <h2 class="tittle">Forget Password</h2>
-                <p class="para">Enter your mail Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro nihil minima quae mollitia autem delectus dolor adipisci labore eos sit eveniet sapiente molestiae, id assumenda aut laboriosam nisi ullam! Corrupti. </p>
+                <p class="para">Insira seu email para que o sistema possa enviar um código de recuperação de senha, assim você poderá resetar sua senha. </p>
             </div>
             <form action="" class="from">
                 <div class="input-group">
-                    <label for="" class="label-tittle">Enter your email</label>
-                    <input type="email" name="email" placeholder="Enter your email">
+                    <label for="" class="label-tittle">Insira seu email</label>
+                    <input type="email" name="email" placeholder="Insira seu email">
                     <span class="icon">&#9993;</span>
                 </div>
 
                 <div class="input-group">
-                    <button class="submit-btn" type="submit">Send Reset Email</button>
+                    <button class="submit-btn" type="submit">Enviar email</button>
                 </div>
             </form>
         </div>
@@ -22,7 +22,7 @@
 
 <style scoped> 
 .wrapper{
-    background-color: #106fde;
+    background-color: #151616;
     widows: 100%;
     height: 100vh;
     padding: 15px;
@@ -90,7 +90,7 @@
 
 .input-group .icon{
     position: absolute;
-    color: #38475a;
+    color: #0e0f11;
     left: 13px;
     top: calc(50% - 11px);
     text-align: center;
@@ -99,7 +99,7 @@
 
 .submit-btn{
     width: 100%;
-    background-color: #106fde;
+    background-color: #202020;
     border: 1px solid transparent;
     border-radius: 8px;
     font-size: 16px;
