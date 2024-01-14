@@ -21,10 +21,10 @@ model User {
   sentMessages    Message[]      @relation("SenderMessages")
   receivedMessages Message[]      @relation("ReceiverMessages")
   resetCodes      ResetCode[]
+  socketId        String         @default("") 
   
   @@map("users")
 }
-
 model Message {
   id              Int             @id @default(autoincrement())
   content         String
