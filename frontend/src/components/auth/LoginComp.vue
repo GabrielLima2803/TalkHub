@@ -16,10 +16,13 @@
                     <input type="password" name="password" placeholder="Senha">
                 </div>
                 <button class="btn-login">Login</button>
-
                 <div>
+                <router-link to="/register" class="reset">
                     <h5 class="registre">Não tem login? se registre</h5>
+                </router-link>
+                <router-link to="/forget-password" class="reset">
                     <h5 class="mt-3">Esqueci Senha?</h5>
+                </router-link>
                 </div>
             </div>
         </div>
@@ -37,7 +40,7 @@ body *{
 .main-login{
     width: 100vw;
     height: 100vh;
-    background-color: #201b2c;
+    background-color: rgb(34, 34, 34);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +54,9 @@ body *{
     align-items: center;
     flex-direction: column;
 }
-
+.reset{
+    text-decoration: none;
+}
 .left-login > h1 {
     font-size: 3vw;
     color: #77ffc0;
@@ -76,7 +81,7 @@ width: 35vw;
     align-items: center;
     flex-direction: column;
     padding: 30px 35px;
-    background: #2f2841;
+    background-color: rgb(43, 42, 42);
     border-radius: 20px;
     box-shadow: 0px 10px 40px #00000056;
 }
@@ -108,7 +113,7 @@ h5:hover{
     border: none;
     border-radius: 10px;
     padding: 15px;
-    background: #514869;
+    background-color: rgb(54, 54, 54);
     color: #f0ffffde;
     font-size: 12pt;
     box-shadow: 0px 10px 40px #00000056;
