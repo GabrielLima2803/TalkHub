@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="container">
             <div class="tittle-section">
-                <h2 class="tittle">Forget Password</h2>
+                <h2 class="title">Forget Password</h2>
                 <p class="para">Insira seu email para que o sistema possa enviar um código de recuperação de senha, assim você poderá resetar sua senha. </p>
             </div>
             <form action="" class="from">
