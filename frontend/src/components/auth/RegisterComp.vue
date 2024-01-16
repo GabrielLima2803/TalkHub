@@ -4,8 +4,9 @@
 
 </script>
 
-<template id="body">
-    <div class="container">
+<template >
+    <div id="body">
+        <div class="container">
         <div class="form-image">
             <img src="@/assets/img/undraw_shopping_re_3wst.svg" alt="">
         </div>
@@ -53,6 +54,7 @@
             </form>
         </div>
     </div>
+    </div>
 </template>
 
 <style scoped>
@@ -62,7 +64,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0c0ce94d;
+    background-color: rgb(34, 34, 34);
 }
 .text-white{
     color: white;
@@ -232,7 +234,7 @@
 }
 
 .continue-button button:hover {
-    background-color: rgba(33, 31, 75, 0.945);
+    background-color: rgba(41, 41, 41, 0.945);
     transition: .5s;
 }
 
