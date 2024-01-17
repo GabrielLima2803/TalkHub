@@ -6,18 +6,25 @@ import { UserService } from './../services/UserService';
 import { Response, Request } from 'express';  
 
 export namespace UserController {
-    export class CreateUserController {
-        async handle(req: Request, res: Response) {
-            const { username, email, password, confirmPassword } = req.body;
+   export class CreateUserController {
+    async handle(req: Request, res: Response) {
+      const { username, email, password, confirmPassword } = req.body;
 
-            if (password !== confirmPassword) {
-                throw new AppError("As senhas não conferem!")
-            }
-            const createUser = new UserService.CreateUserService();
-            const result = await createUser.execute({ username, email, password });
-            return res.status(201).json(result);
+      try {
+        if (password !== confirmPassword) {
+          throw new AppError("As senhas não conferem!")
         }
+
+        const createUser = new UserService.CreateUserService();
+        const result = await createUser.execute({ username, email, password });
+        
+        return res.status(201).json(result);
+      } catch (error) {
+        console.error('Erro durante a criação do usuário:', error);
+        return res.status(500).json({ msg: 'Erro interno do servidor' });
+      }
     }
+  }
 
     export class AuthUserController {
         async handle(req: Request, res: Response) {
@@ -91,17 +98,23 @@ export namespace UserController {
     }
 
     export class ResetPasswordController {
-        async handle(req: Request, res: Response) {
-            const { email, code, newPassword } = req.body;
-    
-            try {
-                const userService = new UserService.ResetPasswordService();
-                const result = await userService.execute({ email, code, newPassword });
-                res.json(result);
-            } catch (error) {
-                res.status(500).json({ error: 'Erro ao resetar a senha' });
-            }
-        }
-    }
+      async handle(req: Request, res: Response) {
+          const { email, code, newPassword } = req.body;
+  
+          try {
+              const userService = new UserService.ResetPasswordService();
+              const result = await userService.execute({ email, code, newPassword });
+              
+              if (result.error) {
+                  return res.status(400).json(result);
+              } else {
+                  return res.json(result);
+              }
+          } catch (error) {
+              console.error(error);
+              return res.status(500).json({ error: 'Erro ao resetar a senha' });
+          }
+      }
+  }
 
 }
