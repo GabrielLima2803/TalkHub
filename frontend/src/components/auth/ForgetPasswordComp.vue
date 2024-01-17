@@ -1,19 +1,43 @@
+<script setup>
+import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+import PreLoader from '../loading/PreLoader.vue';
+const userStore = useUserStore();
+const router = useRouter();
+const email = ref('');
+const loading = ref(false);
+
+const sendResetCode = async () => {
+    try {
+        loading.value = true;
+        await userStore.sendResetCode({ email: email.value });
+        loading.value = false;
+        router.push('/reset-password');
+    } catch (error) {
+        console.error('Erro ao enviar código de recuperação:', error);
+    } 
+};
+</script>
 <template>
+    
     <div class="wrapper">
+        <pre-loader v-if="loading"/>
+
         <div class="container">
             <div class="tittle-section">
                 <h2 class="title">Forget Password</h2>
                 <p class="para">Insira seu email para que o sistema possa enviar um código de recuperação de senha, assim você poderá resetar sua senha. </p>
             </div>
-            <form action="" class="from">
+            <form @submit.prevent="sendResetCode" class="from">
                 <div class="input-group">
-                    <label for="" class="label-tittle">Insira seu email</label>
-                    <input type="email" name="email" placeholder="Insira seu email">
+                    <label for="email" class="label-tittle">Insira seu email</label>
+                    <input v-model="email" type="email" name="email" placeholder="Insira seu email">
                     <span class="icon">&#9993;</span>
                 </div>
 
                 <div class="input-group">
-                    <button class="submit-btn" type="submit">Enviar email</button>
+                    <button type="submit" @click.prevent="sendResetCode" class="submit-btn">Enviar email</button>
                 </div>
             </form>
         </div>
