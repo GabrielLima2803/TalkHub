@@ -121,10 +121,11 @@ export namespace UserService {
   }
 
   export class ResetPasswordService {
-    async execute({ email, code, newPassword }: { email: string, code: string, newPassword: string }) {
+    async execute({ email, code, newPassword }: { email: string, code: string, newPassword: any }) {
         try {
-
+          console.log('Novo Password:', newPassword);
           const hashedPassword = await argon2.hash(newPassword);
+          console.log('Hash Password:', hashedPassword);
             const resetCode = await prisma.resetCode.findFirst({
                 where: {
                     code,
