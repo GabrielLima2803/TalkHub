@@ -1,25 +1,29 @@
-import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
 import api from '@/plugin/axios'
-// import router from '../router';
 
 export const useUserStore = defineStore('user', () => {
-  const state = reactive({
-    user: {},
-    token: '',
-    message: ''
-  })
+  const state = {
+    loggedIn: useStorage('loggedIn', false),
+    user: useStorage('user', {}),
+    token: useStorage('token', ''),
+  }
 
   const registerUsers = async ({ username, email, password, confirmPassword }) => {
-    const response = await api.post('/user/register', {
-      username,
-      email,
-      password,
-      confirmPassword
-    })
-    state.user = response.data.user
-
-    console.log('User registered:', response.data)
+    try {
+      const response = await api.post('/user/register', {
+        username,
+        email,
+        password,
+        confirmPassword
+      })
+      state.user.value = response.data.user
+      console.log('User registered:', response.data)
+      return response
+    } catch (error) {
+      console.error('Error registering user:', error.response.data.error)
+      throw error
+    }
   }
 
   const loginUser = async ({ identifier, password }) => {
@@ -28,15 +32,17 @@ export const useUserStore = defineStore('user', () => {
         identifier,
         password
       })
-
-      state.token = response.data.token
+      state.loggedIn.value = true
+      state.user.value = response.data.user
+      state.token.value = response.data.token
       console.log('User logged in:', response.data)
       return response
     } catch (error) {
-      console.error('Erro durante o login:', error.response.data.msg)
+      console.error('Error during login:', error.response.data.msg)
       throw error
     }
   }
+
   const sendResetCode = async ({ email }) => {
     try {
       const response = await api.post('/user/forget-password', { email })
@@ -48,26 +54,20 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  const resetPassword = async ({email, code, newPassword}) => {
+  const resetPassword = async ({ email, code, newPassword }) => {
     try {
-      const response = await api.post('user/reset-password', {email, code, newPassword})
-      console.log('Senha redefinida com sucesso', response.data)
+      const response = await api.post('user/reset-password', { email, code, newPassword })
+      console.log('Password reset successfully:', response.data)
       return response
     } catch (error) {
-      console.error('Error reset password:')
+      console.error('Error resetting password:', error.response.data.error)
       throw error
     }
   }
 
-  const clearMessage = () => {
-    state.message = ''
-  }
-
   return {
-    user: ref(state.user),
-    message: ref(state.message),
+    ...state,
     registerUsers,
-    clearMessage,
     loginUser,
     sendResetCode,
     resetPassword
