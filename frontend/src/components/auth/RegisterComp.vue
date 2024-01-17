@@ -1,61 +1,91 @@
 <script setup>
+import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore();
+const username = ref('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const registrationError = ref('');
+const registrationSuccess = ref('');
 
-
+const registerUser = async () => {
+    try {
+        await userStore.registerUsers({
+            username: username.value,
+            email: email.value,
+            password: password.value,
+            confirmPassword: confirmPassword.value,
+        });
+        registrationSuccess.value = 'Registro bem-sucedido!';
+        registrationError.value = '';
+    } catch (error) {
+        registrationError.value = 'Erro durante o registro: ';
+        registrationSuccess.value = '';
+    }
+};
 </script>
 
-<template >
+
+
+<template>
     <div id="body">
         <div class="container">
-        <div class="form-image">
-            <img src="@/assets/img/undraw_shopping_re_3wst.svg" alt="">
-        </div>
-        <div class="form">
-            <form action="#">
-                <div class="form-header">
-                    <div class="title">
-                        <h1>Cadastre-se</h1>
+            <div class="form-image">
+                <img src="@/assets/img/undraw_shopping_re_3wst.svg" alt="">
+            </div>
+            <div class="form">
+                <form>
+                    <div class="form-header">
+                        <div class="title">
+                            <h1>Cadastre-se</h1>
+                        </div>
+                        <div class="login-button">
+                            <router-link to="/login">
+                                <button class="text-white">Login</button>
+                            </router-link>
+                        </div>
                     </div>
-                    <div class="login-button">
-                        <router-link to="/login"><button class="text-white">Login</button></router-link>
+                    <div class="input-group">
+                        <div class="input-box">
+                            <label for="username">Nome de Usuário</label>
+                            <input v-model="username" id="username" type="text" name="username"
+                                placeholder="Digite seu usuário" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="email">E-mail</label>
+                            <input v-model="email" id="email" type="email" name="email" placeholder="Digite seu e-mail"
+                                required>
+                        </div>
+                        <div class="input-box">
+                            <label for="password">Senha</label>
+                            <input v-model="password" id="password" type="password" name="password"
+                                placeholder="Digite sua senha" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="confirmPassword" class="text-white">Confirme sua Senha</label>
+                            <input v-model="confirmPassword" id="confirmPassword" type="password" name="confirmPassword"
+                                placeholder="Digite sua senha novamente" required>
+                        </div>
                     </div>
-                </div>
-                <div class="input-group">
-                    <div class="input-box">
-                        <label for="username">Nome de Usuário</label>
-                        <input v-model="username" id="username" type="text" name="username" placeholder="Digite seu usuário" required>
+                    <div class="continue-button">
+                        <button @click.prevent="registerUser">Continuar</button>
+                    </div>
+                    <div v-if="registrationError" class="error-message">
+                        {{ registrationError }}
                     </div>
 
-                    <div class="input-box">
-                        <label for="email">E-mail</label>
-                        <input v-model="email" id="email" type="email" name="email" placeholder="Digite seu e-mail" required>
+                    <div v-if="registrationSuccess" class="success-message">
+                        {{ registrationSuccess }}
                     </div>
-
-                    <div class="input-box">
-                        <label for="password">Senha</label>
-                        <input v-model="password" id="password" type="password" name="password" placeholder="Digite sua senha" required>
-                    </div>
-
-                    <div class="input-box">
-                        <label for="confirmPassword" class="text-white">Confirme sua Senha</label>
-                        <input v-model="confirmPassword" id="confirmPassword" type="password" name="confirmPassword" placeholder="Digite sua senha novamente" required>
-                    </div>
-                </div>
-
-                <div class="continue-button">
-                    <button @click.prevent="registerUser">Continuar</button>
-                </div>
-                <div v-if="registrationError" class="error-message">
-            {{ registrationError }}
+                </form>
+            </div>
         </div>
-                <div v-if="registrationSuccess" class="success-message">
-            Parabéns! O registro foi bem-sucedido.
-        </div>
-            </form>
-        </div>
-    </div>
     </div>
 </template>
+  
+
 
 <style scoped>
 #body {
@@ -66,16 +96,19 @@
     align-items: center;
     background-color: rgb(34, 34, 34);
 }
-.text-white{
+
+.text-white {
     color: white;
 }
+
 .error-message {
-    color: #ff6347; 
+    color: #ff6347;
     padding: 15px;
     margin-top: 20px;
     border-radius: 5px;
     text-align: center;
 }
+
 .success-message {
     color: rgb(0, 61, 28);
     padding: 15px;
@@ -83,6 +116,7 @@
     border-radius: 5px;
     text-align: center;
 }
+
 .container {
     width: 80%;
     height: 80vh;
@@ -289,4 +323,5 @@
     .gender-input {
         margin-top: 0.5rem;
     }
-}</style>
+}
+</style>
