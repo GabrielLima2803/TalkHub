@@ -34,4 +34,19 @@ export namespace ChatController {
       }
     }
   }
+  export class CreateMessageController {
+    async handle(req: Request, res: Response) {
+      const { content, senderId, conversationId } = req.body;
+
+      try {
+        const createMessageService = new chatService.CreateMessageService();
+        const message = await createMessageService.execute({ content, senderId, conversationId });
+
+        return res.status(201).json({ message, success: true });
+      } catch (error) {
+        console.error('Error creating message:', error);
+        return res.status(500).json({ error: 'Error creating message', success: false });
+      }
+    }
+  }
 }
