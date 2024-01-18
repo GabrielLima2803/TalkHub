@@ -55,6 +55,12 @@ export namespace chatService {
                     username: true,
                   },
                 },
+                receiver: {
+                  select: {
+                    id: true,
+                    username: true,
+                  },
+                },
               },
               orderBy: {
                 createdAt: 'asc',
@@ -66,6 +72,43 @@ export namespace chatService {
         return conversation;
       } catch (error) {
         console.error('Error getting conversation info:', error);
+        throw error;
+      }
+    }
+  }
+  export class CreateMessageService {
+    async execute({ content, senderId, conversationId }: { content: string, senderId: number, conversationId: number }) {
+      try {
+        const conversation = await prisma.conversation.findUnique({
+          where: {
+            id: conversationId,
+          },
+          include: {
+            participants: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        });
+  
+        const receiverId = conversation?.participants.find(participant => participant.id !== senderId)?.id;
+  
+        const message = await prisma.message.create({
+          data: {
+            content,
+            senderId,
+            receiverId,
+            conversationId,
+          },
+        });
+  
+        return {
+          message,
+          success: true,
+        };
+      } catch (error) {
+        console.error('Error creating message:', error);
         throw error;
       }
     }
