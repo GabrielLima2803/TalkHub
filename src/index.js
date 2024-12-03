@@ -1,10 +1,16 @@
 const express = require('express');
 const http = require('http');
+const cors = require('cors');
 const { Server } = require('socket.io');
 
 const app = express();
+const {conectarAoMongoDB} = require('./config/db');
+mongoose.set('strictQuery', true);
 const server = http.createServer(app);
 const io = new Server(server);
+app.use(cors)
+app.use(express.json());
+
 
 app.use(express.static('public'));
 
@@ -20,6 +26,10 @@ io.on('connection', (socket) => {
 	});
 });
 
-server.listen(3000, () => {
-	console.log('Servidor rodando em http://localhost:3000');
-});
+conectarAoMongoDB()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Servidor sendo rodado na porta  http://localhost:${port}`);
+    });
+  })
+  .catch(() => console.log('Erro ao conectar ao MongoDB'));
