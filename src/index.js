@@ -10,10 +10,22 @@ app.use(express.static('public'));
 
 io.on('connection', (socket) => {
 	console.log('Novo usuário conectado');
-	
-	socket.on('chat message', (msg) => {
-		io.emit('chat message', msg);
-	});
+	socket.on("newuser", function(username) {
+		socket.broadcast.emit("update", username + " entrou na conversa");
+	})
+
+	socket.on("exituser", function(username) {
+		socket.broadcast.emit("update", username + " saiu da conversa");
+	})
+
+	socket.on("chat", function(message) {
+		socket.broadcast.emit("chat", message);
+	})
+
+
+	// socket.on('chat message', (msg) => {
+	// 	io.emit('chat message', msg);
+	// });
 	
 	socket.on('disconnect', () => {
 		console.log('Usuário desconectado');
