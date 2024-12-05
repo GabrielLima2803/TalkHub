@@ -9,7 +9,7 @@ const { conectarAoMongoDB } = require("./config/db");
 const server = http.createServer(app);
 const io = new Server(server);
 const port = 3000
-app.use(cors);
+app.use(cors());
 app.use(express.json());
 
 app.use(express.static("public"));
@@ -39,8 +39,23 @@ io.on("connection", (socket) => {
 
 conectarAoMongoDB()
   .then(() => {
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Servidor sendo rodado na porta  http://localhost:${port}`);
     });
   })
   .catch(() => console.log("Erro ao conectar ao MongoDB"));
+
+//   async function testeMensagem() {
+//     try {
+//         const mensagem = new Mensagem({
+//             username: 'Teste',
+//             texto: 'Olá, mundo!',
+//         });
+//         await mensagem.save();
+//         console.log('Mensagem salva com sucesso:', mensagem);
+//     } catch (error) {
+//         console.error('Erro ao salvar mensagem:', error);
+//     }
+// }
+
+// testeMensagem();
