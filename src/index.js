@@ -2,36 +2,58 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 
+const User = require("../src/models/User");
+const Message = require('../src/models/Messagem');
 const app = express();
 const server = http.createServer(app);
+const port = 3000;
 const io = new Server(server);
+const { conectarAoMongoDB } = require("./config/connection");
 
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
-	console.log('Novo usuário conectado');
-	socket.on("newuser", function(username) {
-		socket.broadcast.emit("update", username + " entrou na conversa");
-	})
+  console.log('Novo usuário conectado');
 
-	socket.on("exituser", function(username) {
-		socket.broadcast.emit("update", username + " saiu da conversa");
-	})
+  socket.on('newuser', async (username) => {
+    const existingUser = await User.findOne({ username });
 
-	socket.on("chat", function(message) {
-		socket.broadcast.emit("chat", message);
-	})
+    if (existingUser) {
+      socket.broadcast.emit('update', username + ' entrou na conversa');
+    } else {
+      const newUser = new User({ username });
+      await newUser.save();  // Agora aguardamos a Promise para garantir que o usuário é salvo
+      socket.broadcast.emit('update', username + ' entrou na conversa');
+    }
+  });
 
+  socket.on('exituser', (username) => {
+    socket.broadcast.emit('update', username + ' saiu da conversa');
+  });
 
-	// socket.on('chat message', (msg) => {
-	// 	io.emit('chat message', msg);
-	// });
-	
-	socket.on('disconnect', () => {
-		console.log('Usuário desconectado');
-	});
+  socket.on('chat', async (message) => {
+    const newMessage = new Message({
+      username: message.username,
+      text: message.text
+    });
+
+    try {
+      await newMessage.save();  // Usamos await para aguardar o salvamento da mensagem
+      socket.broadcast.emit('chat', message);
+    } catch (err) {
+      console.log('Erro ao salvar mensagem:', err);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Usuário desconectado');
+  });
 });
 
-server.listen(3000, () => {
-	console.log('Servidor rodando em http://localhost:3000');
-});
+conectarAoMongoDB()
+  .then(() => {
+    server.listen(port, () => {
+      console.log(`Servidor sendo rodando na porta  http://localhost:${port}`);
+    });
+  })
+  .catch(() => console.log("Erro ao conectar ao MongoDB"));
