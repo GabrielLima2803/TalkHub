@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-
 const User = require("../src/models/User");
 const Message = require('../src/models/Messagem');
 const app = express();
@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
       socket.broadcast.emit('update', username + ' entrou na conversa');
     } else {
       const newUser = new User({ username });
-      await newUser.save();  // Agora aguardamos a Promise para garantir que o usuário é salvo
+      await newUser.save(); 
       socket.broadcast.emit('update', username + ' entrou na conversa');
     }
   });
